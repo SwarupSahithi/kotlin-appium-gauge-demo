@@ -1,10 +1,10 @@
 # Base image with Java and Maven
-FROM maven:3.8.8-openjdk-11
+FROM maven:3.8.8-openjdk-17
 
 # Set working directory
 WORKDIR /app
 
-# Install required tools (Gauge, Node.js)
+# Install Gauge and its plugins
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -17,14 +17,11 @@ RUN apt-get update && apt-get install -y \
     && gauge install screenshot \
     && apt-get clean
 
-# Copy all files into image
+# Copy project files
 COPY . .
 
 # Build the project
 RUN mvn clean install -DskipTests
 
-# Expose Appium port if needed (optional)
-EXPOSE 4723
-
-# Set default command to run Gauge specs
+# Run the specs by default
 CMD ["gauge", "run", "specs"]
