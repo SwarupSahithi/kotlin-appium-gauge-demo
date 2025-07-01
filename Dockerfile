@@ -4,7 +4,7 @@ FROM maven:3.8.8-eclipse-temurin-11
 # Set working directory
 WORKDIR /app
 
-# Install dependencies: Gauge, curl, etc.
+# Install Gauge and plugins
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
@@ -12,10 +12,13 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     software-properties-common \
  && curl -sS https://dl.gauge.org/stable | sh \
+ && export PATH=$PATH:/usr/local/bin \
+ && gauge --version \
  && gauge install java \
  && gauge install html-report \
  && gauge install screenshot \
  && apt-get clean
+
 
 # Copy project files
 COPY . .
