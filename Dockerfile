@@ -1,7 +1,11 @@
 FROM openjdk:8-jdk
 
-ENV JAVA_HOME=/docker-java-home
-ENV PATH="$JAVA_HOME/bin:$PATH"
+RUN export JAVA_HOME=/docker-java-home && \
+    export PATH=$JAVA_HOME/bin:$PATH && \
+    java -version && \
+    mvn -version && \
+    mvn clean compile
+
 
 RUN apt-get update && \
     apt-get install -y curl unzip git software-properties-common maven && \
