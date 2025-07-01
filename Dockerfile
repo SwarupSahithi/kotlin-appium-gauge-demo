@@ -1,30 +1,24 @@
-# Use a valid Maven + Java base image
-FROM maven:3.8.8-eclipse-temurin-11
+FROM ubuntu:22.04
 
-# Set working directory
-WORKDIR /app
-
-# Install Gauge and plugins
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     wget \
     gnupg \
-    software-properties-common \
- && curl -sS https://dl.gauge.org/stable | sh \
- && export PATH=$PATH:/usr/local/bin \
- && gauge --version \
- && gauge install java \
- && gauge install html-report \
- && gauge install screenshot \
- && apt-get clean
+    software-properties-common
 
+# Install Gauge CLI
+RUN curl -sS https://dl.gauge.org/stable | sh
 
-# Copy project files
-COPY . .
+# Ensure Gauge is available in PATH
+ENV PATH="/usr/local/bin:$PATH"
 
-# Build the Maven project
-RUN mvn clean install -DskipTests
+# Install Gauge plugins
+RUN gauge --version && \
+    gauge install java && \
+    gauge install html-report && \
+    gauge install screenshot
 
-# Default command to run Gauge tests
-CMD ["gauge", "run", "specs"]
+# Clean up
+RUN apt-get clean
