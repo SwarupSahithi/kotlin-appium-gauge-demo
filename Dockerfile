@@ -29,7 +29,9 @@ WORKDIR /app
 COPY . .
 
 # Pre-download Maven dependencies
-RUN ./mvnw clean compile
+RUN apt-get update && apt-get install -y maven \
+ && mvn clean compile
+
 
 # Default command: run Gauge specs
 CMD ["gauge", "run", "specs"]
