@@ -1,26 +1,14 @@
 FROM openjdk:8-jdk
 
-RUN export JAVA_HOME=/docker-java-home && \
-    export PATH=$JAVA_HOME/bin:$PATH && \
-    java -version && \
-    mvn -version && \
-    mvn clean compile
+# Install Maven
+RUN apt-get update && apt-get install -y maven
 
-
-RUN apt-get update && \
-    apt-get install -y curl unzip git software-properties-common maven && \
-    apt-get clean
-
-RUN curl -SsL https://downloads.gauge.org/stable | sh && \
-    gauge install java && \
-    gauge install html-report && \
-    gauge install screenshot
+# Set JAVA_HOME and update PATH
+ENV JAVA_HOME=/docker-java-home
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
 WORKDIR /app
 COPY . .
 
-RUN java -version && \
-    mvn -version && \
-    mvn clean compile
-
-CMD ["gauge", "run", "specs"]
+# Now run your Maven commands
+RUN java -version && mvn -version && mvn clean compile
