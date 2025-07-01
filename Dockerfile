@@ -27,7 +27,14 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Build the Maven project
-RUN echo "JAVA_HOME=$JAVA_HOME" && java -version && mvn -version && mvn clean compile
+RUN export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 && \
+    export PATH=$JAVA_HOME/bin:$PATH && \
+    echo "JAVA_HOME=$JAVA_HOME" && \
+    java -version && \
+    mvn -version && \
+    mvn clean compile
+
+
 
 # Run specs
 CMD ["gauge", "run", "specs"]
