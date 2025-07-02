@@ -7,6 +7,6 @@ RUN apt-get update && apt-get install -y \
     lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -fsSL https://github.com/getgauge/gauge/releases/download/v1.6.12/gauge-1.6.12-linux-amd64.tar.gz | tar -xz -C /usr/local/bin
+RUN curl -fsSL https://github.com/getgauge/gauge/releases/download/v1.6.18/gauge-1.6.18-linux-amd64.tar.gz | tar -xz -C /usr/local/bin
 
 # Add your application setup here
