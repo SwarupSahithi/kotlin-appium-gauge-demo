@@ -16,8 +16,8 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Gauge
-RUN curl -fsSL https://github.com/getgauge/gauge/releases/download/v1.1.8/gauge-1.1.8-linux-amd64.tar.gz \
-    | tar -xz -C /usr/local/bin
+RUN curl -fsSL https://github.com/getgauge/gauge/releases/download/v1.6.12/gauge-1.6.12-linux-amd64.tar.gz | tar -xz -C /usr/local/bin
+
 
 # Verify Gauge installation
 RUN gauge --version
