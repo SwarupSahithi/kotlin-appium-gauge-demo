@@ -1,24 +1,17 @@
-FROM maven:3.8.5-openjdk-17-slim AS builder
+# Use Maven with OpenJDK 17 as the base image
+FROM maven:3.8.5-openjdk-17 AS builder
 
+# Set the working directory
 WORKDIR /workspace
 
-# Copy project files
-COPY pom.xml src specs ./ 
+# Copy the Maven project files
+COPY pom.xml .
 
-# Install necessary dependencies
-RUN apt-get update && \
-    apt-get install -y curl unzip gnupg2 ca-certificates && \
-    curl -SsL https://downloads.gauge.org/stable | sh && \
-    gauge install java html-report
+# Initialize the Gauge project
+RUN gauge --init java
+
+# Copy the source and specs directories
+COPY src specs .
 
 # Build the project
 RUN mvn clean package -DskipTests
-
-FROM eclipse-temurin:17-jre-jammy AS runtime
-
-WORKDIR /app
-
-# Copy necessary files from the builder stage
-COPY --from=builder /workspace/target/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
