@@ -1,31 +1,20 @@
-FROM openjdk:17-jdk-slim AS builder
-WORKDIR /workspace
+# Use an official Ubuntu as a parent image
+FROM ubuntu:20.04
 
-# Install necessary dependencies
+# Set environment variables to non-interactive (prevents prompts during build)
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     curl \
-    gnupg2 \
-    ca-certificates \
-    sudo \
-    apt-transport-https \
+    unzip \
+    gnupg \
+    lsb-release \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Gauge CLI
-RUN curl -SsL https://downloads.gauge.org/stable | sh
+# Install Gauge
+RUN curl -fsSL https://github.com/getgauge/gauge/releases/download/v1.0.0/gauge-1.0.0-linux-amd64.tar.gz \
+    | tar -xz -C /usr/local/bin
 
-# Initialize Gauge project
-RUN gauge --init java
-
-# Copy project files
-COPY pom.xml ./
-COPY src/ ./src
-COPY specs/ ./specs
-
-# Build the project
-RUN mvn clean package -DskipTests
-
-FROM eclipse-temurin:17-jre-jammy AS runtime
-WORKDIR /app
-COPY --from=builder /workspace/target/*.jar app.jar
-
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Verify installation
+RUN gauge --version
