@@ -1,5 +1,7 @@
 # Use official Maven image with JDK
-FROM maven:3.8.7-openjdk-17 AS builder
+FROM maven:3.9.10-eclipse-temurin-17 AS builder
+# Continue with your build steps...
+
 
 # Set workdir
 WORKDIR /app
